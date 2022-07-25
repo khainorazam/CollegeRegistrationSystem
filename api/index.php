@@ -8,11 +8,31 @@ require '../vendor/autoload.php';
 
 $app = new \Slim\App;
 
-$app->put('/user/{id}', function (Request $request, Response $response, array $args) {
-    $id=$args['id'];
-    $response->getBody()->write("This is update user with id... :$id");
 
-    return $response;
+//ACCOMODATION_MANAGER
+//GET: Read approve/reject list
+$app->get('/students_apprej_list', function (Request $request, Response $response) {
+    
+
+    $sql = "SELECT * FROM student WHERE approvalstatus = '0' AND NOT college = '';" ;
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $bid = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($bid);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+
 });
 
 //delete user
