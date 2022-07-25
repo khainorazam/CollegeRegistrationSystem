@@ -8,7 +8,7 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE");
         private $host = 'localhost';
         private $user = 'root';
         private $password = '';
-        private $dbname = 'myproject';
+        private $dbname = 'mydatabase';
 
         //Connect
         public function connect(){
