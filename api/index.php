@@ -7,7 +7,7 @@ require 'db.php';
 require '../vendor/autoload.php';
 
 $app = new \Slim\App;
-
+session_start();
 
 //ACCOMODATION_MANAGER
 //GET: Read approve/reject list
@@ -123,6 +123,137 @@ $app->get('/user/{id}', function ($request,$response,$args) {
         $user = $stmt->fetchAll(PDO::FETCH_OBJ);
         $db = null;
         echo json_encode($user);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+});
+
+//login
+$app->post('/login', function (Request $request, Response $response, array $args) {
+
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    $sql = "SELECT * FROM user WHERE username='$username' AND password='$password'";
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+    
+        $stmt = $db->query($sql);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $db = null;
+        
+
+            if($stmt->rowCount() > 0){
+                $_SESSION["Login"] = "YES";
+                $_SESSION["USERNAME"] = $user['username'];
+                $_SESSION["PASSWORD"] =$user['password'];
+                $_SESSION["LEVEL"] =$user['level'];
+                $_SESSION["MATRIC"] = $user['matric'];
+                echo ($_SESSION["LEVEL"]);
+            } 
+
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);  
+    }
+});
+
+//login admin
+$app->post('/admin_login', function ($request,$response, $args) {
+    
+    $matric = $_SESSION["MATRIC"];
+    $sql = "SELECT * FROM adminn WHERE staffID = '$matric'";
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $user = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+
+        if($stmt->rowCount() > 0){
+            $_SESSION["Login"] = "YES";
+            $_SESSION["USER"] = strtoupper ($user['name']);
+            $_SESSION["ID"] = $user['id'];
+            $_SESSION["IC"] = $user['ic'];
+            $_SESSION["STAFFID"] = $user['matric'];
+            echo ("OK");
+        } 
+
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+});
+
+//login am
+$app->post('/am_login', function ($request,$response, $args) {
+    
+    $matric = $_SESSION["MATRIC"];
+    $sql = "SELECT * FROM accomodationmanager WHERE staffID = '$matric'";
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $user = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+
+        if($stmt->rowCount() > 0){
+            $_SESSION["Login"] = "YES";
+            $_SESSION["USER"] = strtoupper ($user['name']);
+            $_SESSION["ID"] = $user['id'];
+            $_SESSION["IC"] = $user['ic'];
+            $_SESSION["STAFFID"] = $user['matric'];
+            echo ("OK");
+        } 
+
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+});
+
+//login student
+$app->post('/student_login', function ($request,$response, $args) {
+    
+    $matric = $_SESSION["MATRIC"];
+    $sql = "SELECT * FROM student WHERE matric = '$matric'";
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $user = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+
+        if($stmt->rowCount() > 0){
+            $_SESSION["Login"] = "YES";
+            $_SESSION["USER"] = strtoupper ($user['name']);
+            $_SESSION["ID"] = $user['id'];
+            $_SESSION["IC"] = $user['ic'];
+            $_SESSION["MATRIC"] = $user['matric'];
+            echo ("OK");
+        } 
+
     } catch (PDOException $e) {
         $data = array(
             "status" => "fail"
