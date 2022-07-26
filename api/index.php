@@ -35,6 +35,185 @@ $app->get('/students_apprej_list', function (Request $request, Response $respons
 
 });
 
+//GET: Read approve/reject list (single ID)
+$app->get('/students_apprej_list/{id}', function (Request $request,  array $args) {
+    $id=$args['id'];
+
+    $sql = "SELECT * FROM student  WHERE id= $id";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $bid = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($bid);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+
+});
+
+//PUT: Update APPROVE
+$app->put('/updateapprove/{id}', function (Request $request, Response $response, array $args) {
+    $id = $args['id'];
+    $input = $request->getParsedBody();
+    $sql = "UPDATE student SET approvalstatus = :1,  WHERE id = :id";
+
+    try {
+        //get the db object
+        $db = new db();
+        //connect
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':approvalstatus', 1);
+        $stmt->execute();
+        $count = $stmt->rowCount();
+        $db = null;
+        if($count == 0){
+            return $response->withJson(array('status' => 'Unsuccessful', 'message' => 'Failed to update'), 400);
+        }
+        $data = array(
+            'status' => 'success',
+            'message' => 'successfully update',
+        );
+        return $response->withJson($data, 200);
+
+
+    } catch (PDOException $e) {
+        $error = array(
+            'status' => 'Error',
+            'message' => $e->getMessage(),
+        );
+        return $response->withJson($error, 400);
+    }
+
+
+});
+
+//GET: Read all student detail 
+$app->get('/students_detail_list', function (Request $request, Response $response) {
+    
+    $sql = "SELECT * FROM student";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $bid = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($bid);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+
+});
+
+
+//GET: Read student detail (single Matric No.)
+$app->get('/student_detail_list/', function (Request $request, Response $response, array $args) {
+    $id=$args['matric'];
+    $matric = $_POST['matric'];
+
+    $sql = "SELECT * FROM student WHERE matric = '$matric'";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $bid = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($bid);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+
+});
+
+//GET: Read Accomodation Manager Data
+$app->get('/accom', function (Request $request, Response $response, array $args) {
+    $id=$_SESSION['STAFFID'];
+    
+
+    $sql = "SELECT * FROM AccomodationManager WHERE staffID = '$id'";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $bid = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($bid);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+
+});
+
+//PUT: Update specific accomodation manager
+$app->put('/updatemanager/{staffID}', function (Request $request, Response $response, array $args) {
+    $id = $args['staffID'];
+    $input = $request->getParsedBody();
+    $sql = "UPDATE AccomodationManager SET name = :name, ic= :ic, WHERE staffID = :staffID";
+
+    try {
+        //get the db object
+        $db = new db();
+        //connect
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':staffID', $id);
+        $stmt->bindParam(':name', $input['name']);
+        $stmt->bindParam(':ic', $input['ic']);
+        $stmt->execute();
+        $count = $stmt->rowCount();
+        $db = null;
+        if($count == 0){
+            return $response->withJson(array('status' => 'Unsuccessful', 'message' => 'Failed to update'), 400);
+        }
+        $data = array(
+            'status' => 'success',
+            'message' => 'successfully update',
+        );
+        return $response->withJson($data, 200);
+
+
+    } catch (PDOException $e) {
+        $error = array(
+            'status' => 'Error',
+            'message' => $e->getMessage(),
+        );
+        return $response->withJson($error, 400);
+    }
+
+
+});
+
 //delete user
 $app->delete('/user/{id}', function (Request $request, Response $response, array $args) {
     $id=$args['id'];

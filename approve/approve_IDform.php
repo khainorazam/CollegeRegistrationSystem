@@ -79,15 +79,15 @@ document.addEventListener("DOMContentLoaded",function(){
 
 </script>
 
-<FORM name="updategetID" method="GET" action="approve_form.php" >
+<FORM name="approve-button"  >
 <TABLE name="approveIDtable" border="0">
 	<TR>
-        <TD>Which <b>ID</b> do you want to select for APPROVE/REJECT?</TD>
+        <TD>Which <b>ID</b> do you want to select for APPROVE?</TD>
 
   </TR>
 
 	<TR>
-				<TD><INPUT class="approve-box" type="text" name="ID" size="8" id="id_input"></TD>
+				<TD><INPUT class="approve-box" type="text" name="id" id="id" size="8" id="id_input"></TD>
 
  </TR>
 
@@ -113,8 +113,31 @@ document.addEventListener("DOMContentLoaded",function(){
 </script>
 
 <tr>
-	<TD><INPUT class="approve-button" type="submit" name="button1" id="approve_btn" value="Confirm"></TD>
+	<TD><INPUT class="approve-button" type="submit" name="button1" id="approve-button" value="Confirm"></TD>
 </tr>
+
+<script>
+  document.getElementById("approve-button").addEventListener('click',function(e){
+    e.preventDefault();
+            var xht = new XMLHttpRequest();
+            
+            var id = document.getElementById("id").value;
+            
+            xht.open("PUT","http://localhost/CollegeRegistrationSystem/api/updateapprove/" + id,true);
+            xht.send();
+            
+
+            xht.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    const objects = JSON.parse(this.responseText);
+                    
+                }
+            };
+            location.reload();
+            
+
+        });
+</script>
 
 </TABLE>
 </FORM>
