@@ -36,15 +36,7 @@ if ($_SESSION["LEVEL"] == 1 || $_SESSION["LEVEL"] == 2) {   //only user with acc
 	<div class="div1">
 
 
-	<?php
-	require ("config.php"); //read up on php includes https://www.w3schools.com/php/php_includes.asp
-
-	$studentMatric = $_POST['studentMatric'];
-	$sql = "SELECT * FROM student WHERE matric = '{$studentMatric}'";
-	$result = mysqli_query($conn, $sql);
-
-	if (mysqli_num_rows($result) > 0) {
-		$var=0; 	?>
+	
 
 	<!-- Search field -->
 	<form name="form1" method ="POST" action="view_search.php">
@@ -58,7 +50,7 @@ if ($_SESSION["LEVEL"] == 1 || $_SESSION["LEVEL"] == 2) {   //only user with acc
 	<table class="table2" width="600" border="1" cellspacing="0" cellpadding="3">
 
 	<!-- Print table heading -->
-
+	<thead>
 	<tr class="header">
 	<th >No</th>
 	<th >Name</th> <!--Student table-->
@@ -72,120 +64,88 @@ if ($_SESSION["LEVEL"] == 1 || $_SESSION["LEVEL"] == 2) {   //only user with acc
 	<?php } ?>
 
 	</tr>
-
-	<?php
-		// output data of each row
-		while($rows = mysqli_fetch_assoc($result)) {
-	?>
-
-	<tr class="dalam">
-		<td ><?php echo $var=$var+1; ?></td>
-		<td><?php echo $rows['name']; ?></td>
-		<td><?php echo $rows['ic']; ?></td>
-		<td><?php echo $rows['matric']; ?></td>
-
-
-	<?php
-		if($rows['approvalstatus']=='1')
-			{
-				echo "<TD align=center>Approved</TD>";
-			}
-			else if($rows['approvalstatus']=='0')
-			{
-				echo "<TD align=center>Pending</TD>";
-			}
-			else{
-				echo "<TD align=center>Rejected</TD>";
-
-			}
-	?>
-
+	</thead>
+	<tbody id ="item">
+                   
+                
+    </tbody>
+	
 	<?php if ($_SESSION["LEVEL"] == '1') {?>
-		<!--only user with access level 1 can view update and delete button-->
-		<td align="center"> <a href="../student/update_student_form.php?name=<?php echo urlencode($rows['matric'])?>" target="_blank"><img src="../.css/image/Update user.svg" alt="Update Icon" style="width:42px;height:42px;"></a> </td>
-		<td align="center"> <a href="../student/delete_student_form.php?name=<?php echo urlencode($rows['matric'])?>" target="_blank"><img src="../.css/image/delete.svg" alt="Delete Icon" style="width:42px;height:42px;"></a> </td>
-	</tr>
+			<!--only user with access level 1 can view update and delete button-->
+			<!-- <td class="dalam2" align="center"> <a href="../student/update_student_form.php" target="_blank"><img src="../.css/image/Update user.svg" alt="Update Icon" style="width:42px;height:42px;"></a> </td>
+			<td class="dalam2" align="center"> <a href="../student/delete_student_form.php" target="_blank"><img src="../.css/image/delete.svg" alt="Delete Icon" style="width:42px;height:42px;"></a> </td> -->
+			<td align="center" > <a href="../student/update_student_form.php?name=<?php echo urlencode($rows['matric'])?>" target="_blank"><img src="../.css/image/Update user.svg" alt="Update Icon" style="width:42px;height:42px;"></a></td>
+			<td align="center" > <a href="../student/delete_student_form.php?name=<?php echo urlencode($rows['matric'])?>" target="_blank" ><img src="../.css/image/delete.svg" alt="Delete Icon" style="width:42px;height:42px;"></a> </td>
+		</tr>
 
-	<?php }
 
-		}
-	} else {
-		echo "<h3>No match found.";
-		//echo '<a href = "view_student3.php">Go Back</a></h3>';
-		}
-
-	mysqli_close($conn);
+		<?php }
+	}
 	?>
 
 	</table>
 
-
-	<?php if ($_SESSION["LEVEL"] == '1'  ) {?>
-	<br><br>
-	<a href="../student/view_student3.php" class="button"> Go back </a>
-	<?php } ?>
+	
 
 	<br><br>
 	<!-- <a href="../student/view_student.php">Click here to view all applications</a> <br/><br/> -->
 
 
-	<?php } // If the user is not correct level
-	else if ($_SESSION["LEVEL"] == 3 ) {
+	
 
-	$sql="SELECT * FROM Student WHERE id=".$_SESSION["ID"];//change ID later
-
-
-
-	echo "<h2>Viewing ".$_SESSION["USER"]."'s Data</h2>";
-
-	echo "<h2>View Details</h2>";
-
-	require ("config.php"); //read up on php includes https://www.w3schools.com/php/php_includes.asp
-
-	$result = mysqli_query($conn, $sql);
-
-	if (mysqli_num_rows($result) > 0) {
-
-	echo "<table width='600' border='1' cellspacing='0' cellpadding='3'>";
-
-		//Print table heading
-	echo "<tr>
-		<td align='center'><strong>Name</strong></td> <!--Student table-->
-		<td align='center'><strong>IC</strong></td>
-		<td align='center'><strong>Matric</strong></td>
-		<td align='center'><strong>Application Status</strong></td>
-		</tr>";
-
-	// output data of each row
-	while($rows = mysqli_fetch_assoc($result)) {
-
-	echo    "<tr>
-			<td align='center'>".$rows['name']."</td>
-			<td align='center'>".$rows['ic']."</td>
-			<td align='center'>".$rows['matric']."</td>
-			<td align='center'>".$rows['approvalstatus']."</td>
-		</tr>";
-
-	}
-	}
-	else {
-	echo "<h3>There are no records to show</h3>";
-	}
-
-	mysqli_close($conn);
-
-
-	echo "</table>
-		<br><br>
-		<a href='view_student.php'>Click here to view application</a> <br/><br/>";
-	echo "<br/><br/>
-	<a href='logout.php'>LOGOUT</a>";
-	}
-
-	?>
 		</div>
 	</div>
 
+	<script>
+document.addEventListener("DOMContentLoaded",function(){
+            //step 1
+            var xht = new XMLHttpRequest();
+			
+
+            //step 2
+            xht.open("GET", "http://localhost/CollegeRegistrationSystem/api/student_detail_list/",	true);
+		
+            //step 3
+            xht.send();
+
+            //step 4 - we do the process upon receving the response with status 200
+            xht.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status == 200){
+                    alert(this.responseText);
+                    var item = JSON.parse(this.responseText);
+
+                    
+
+						if(item[i].college == null){
+							item[i].college = "N/A";
+						}
+
+						if (item[i].approvalstatus == '1'){
+							item[i].approvalstatus = "Approved";
+						}
+						else if(item[i].approvalstatus == '0'){
+							item[i].approvalstatus = "Pending";
+						}
+						else{
+							item[i].approvalstatus = "Rejected";
+						}
+
+
+						content += "<tr class ='dalam'><td>" + [i + 1]+ "</td>" + "<td>" + item[i].name + "</td>" + "<td>" + item[i].ic + "</td>" + "<td>" + item[i].matric + "</td>" + "<td>" + item[i].college + "</td>" + "<td>" 
+						+ item[i].approvalstatus + "</td>";
+						console.log(item);
+					
+                    document.getElementById("item").innerHTML = content;
+                }
+
+                //step 4, with status == 404
+                else if(this.readyState == 4 && this.status == 404){
+                    alert(this.status + ' resource not found');
+                }
+            };
+        }
+    )	
+</script>
 
 
 	</body>
