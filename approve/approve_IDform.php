@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded",function(){
 <FORM name="approve-button"  >
 <TABLE name="approveIDtable" border="0">
 	<TR>
-        <TD>Which <b>ID</b> do you want to select for APPROVE?</TD>
+        <TD>Which <b>ID</b> do you want to select?</TD>
 
   </TR>
 

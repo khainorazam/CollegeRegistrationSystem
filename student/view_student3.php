@@ -34,13 +34,12 @@ if ($_SESSION["LEVEL"] == 1 || $_SESSION["LEVEL"] == 2) {   //only user with acc
 		<div class="div1">
 <!-- 
 		
-
 		<br>
 		<!-- Search field -->
-		<form class="search-bar" name="form1" method ="POST" action="view_search.php">
+		<!-- <form class="search-bar" id ="form" name="form1" method ="post">
 			<input class="search-box"type="text"  name="studentMatric" id ="matric" placeholder="Insert Matric Number" size="30">
 			<button type="submit"><i class="fa fa-search" class="button2"></i></button>
-		</form>
+		</form> -->
 
 
 		<!-- Start table tag -->
