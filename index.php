@@ -71,22 +71,13 @@
     xhr.onload = function() {
 
       if (xhr.readyState === xhr.DONE) {
-        var xhl = new XMLHttpRequest();
-        if (xhr.responseText.trim() == "1") {
-          alert("Login as Admin");
-          xhl.open("post", "http://localhost/CollegeRegistrationSystem/api/admin_login", true);
-          window.location.href = 'http://localhost/CollegeRegistrationSystem/main.php';
-
-        }
         if (xhr.responseText.trim() == "2") {
           alert("Login as Accomodation Manager");
-          xhl.open("post", "http://localhost/CollegeRegistrationSystem/api/am_login", true);
           window.location.href = 'http://localhost/CollegeRegistrationSystem/main.php';
 
         }
         if (xhr.responseText.trim() == "3") {
           alert("Login as Student");
-          xhl.open("post", "http://localhost/CollegeRegistrationSystem/api/student_login", true);
           window.location.href = 'http://localhost/CollegeRegistrationSystem/main.php';
 
         } else {
