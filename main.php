@@ -20,11 +20,6 @@ if ($_SESSION["Login"] != "YES") //if the user is not logged in or has been logg
       <div class="main-item session">
         <div>
           <?php
-          if ($_SESSION["LEVEL"] == 1)
-            echo '<a href="admin/admin.php"><img class="main-item-image" src=".css/image/avatar.svg" alt="Avatar"></a>';
-          ?>
-
-          <?php
           if ($_SESSION["LEVEL"] == 2)
             echo '<a href="am/am.php"><img class="main-item-image" src=".css/image/avatar.svg" alt="Avatar"></a>';
           ?>

@@ -17,7 +17,7 @@ header("Location: ../index.php");
 					<li class="navi"><a>College Registration System</a></li>
 				<li id="active-link" class="navi" style="float:right"><a href="../logout.php"><img src="../.css/image/whitelogout.png" alt="try" style = "width:default;height:25px;"></a></li>
 				<li class="navi" style="float:right"><a href="#about"><img src="../.css/image/user.png" alt="try" style = "width:default;height:24px;"></a></li>
-				<li class="navi" style="float:right"><a href="#about"><?php echo $_SESSION['USER'] ?></a></li>
+				<li class="navi" style="float:right"><a id="username" href="#about"></a></li>
 			</ul>
 			<h2 class="menu-title">Student page</h2>
 
@@ -46,24 +46,21 @@ header("Location: ../index.php");
 		</div>
 
 		</div>
+		<script>
 
 
+const xhr = new XMLHttpRequest();
 
+    xhr.open('get', 'http://localhost/CollegeRegistrationSystem/api/studentinfo', true);
+    xhr.send();
+    xhr.onload = function () {
+        var item = JSON.parse(xhr.responseText);
 
+        for (let i = 0; i < item.length; i++) {
+            document.getElementById("username").innerHTML = item[i].name;
+        }
+    }
 
-
-
-
-
-	<!-- <h1>Student page</h1>
-
-    <a href="../college/college_form.php">Apply College</a> <br/><br/>
-
-	<a href="view_application.php">View Application</a> <br/><br/>
-
-	<a href="update_student_form.php">Update My information</a> <br/><br/>
-
-	<a href="../main.php">Go Back</a> <br/><br/> -->
-
+</script>
 	</body>
 	</html>

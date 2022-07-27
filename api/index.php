@@ -345,75 +345,12 @@ $app->post('/login', function (Request $request, Response $response, array $args
     }
 });
 
-//login admin
-$app->post('/admin_login', function ($request,$response, $args) {
-    
-    $matric = $_SESSION["MATRIC"];
-    $sql = "SELECT * FROM adminn WHERE staffID = '$matric'";
-    try {
-        // Get DB Object
-        $db = new db();
-        // Connect
-        $db = $db->connect();
+//view for student
+$app->get('/studentinfo', function ($request,$response,$args) {
 
-        $stmt = $db->query($sql);
-        $user = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $db = null;
-
-        if($stmt->rowCount() > 0){
-            $_SESSION["Login"] = "YES";
-            $_SESSION["USER"] = strtoupper ($user['name']);
-            $_SESSION["ID"] = $user['id'];
-            $_SESSION["IC"] = $user['ic'];
-            $_SESSION["STAFFID"] = $user['matric'];
-            echo ("OK");
-        } 
-
-    } catch (PDOException $e) {
-        $data = array(
-            "status" => "fail"
-        );
-        echo json_encode($data);
-    }
-});
-
-//login am
-$app->post('/am_login', function ($request,$response, $args) {
-    
-    $matric = $_SESSION["MATRIC"];
-    $sql = "SELECT * FROM accomodationmanager WHERE staffID = '$matric'";
-    try {
-        // Get DB Object
-        $db = new db();
-        // Connect
-        $db = $db->connect();
-
-        $stmt = $db->query($sql);
-        $user = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $db = null;
-
-        if($stmt->rowCount() > 0){
-            $_SESSION["Login"] = "YES";
-            $_SESSION["USER"] = strtoupper ($user['name']);
-            $_SESSION["ID"] = $user['id'];
-            $_SESSION["IC"] = $user['ic'];
-            $_SESSION["STAFFID"] = $user['matric'];
-            echo ("OK");
-        } 
-
-    } catch (PDOException $e) {
-        $data = array(
-            "status" => "fail"
-        );
-        echo json_encode($data);
-    }
-});
-
-//login student
-$app->post('/student_login', function ($request,$response, $args) {
-    
-    $matric = $_SESSION["MATRIC"];
+    $matric = $_SESSION["MATRIC"] ;
     $sql = "SELECT * FROM student WHERE matric = '$matric'";
+
     try {
         // Get DB Object
         $db = new db();
@@ -423,22 +360,43 @@ $app->post('/student_login', function ($request,$response, $args) {
         $stmt = $db->query($sql);
         $user = $stmt->fetchAll(PDO::FETCH_OBJ);
         $db = null;
-
-        if($stmt->rowCount() > 0){
-            $_SESSION["Login"] = "YES";
-            $_SESSION["USER"] = strtoupper ($user['name']);
-            $_SESSION["ID"] = $user['id'];
-            $_SESSION["IC"] = $user['ic'];
-            $_SESSION["MATRIC"] = $user['matric'];
-            echo ("OK");
-        } 
-
+        echo json_encode($user);
     } catch (PDOException $e) {
         $data = array(
             "status" => "fail"
         );
         echo json_encode($data);
     }
+});
+
+$app->put('/updatestudentinfo', function (Request $request, Response $response, array $args) {
+    $matric = $_SESSION["MATRIC"] ;
+    $input = $request->getParsedBody();
+    $sql = "UPDATE student SET name = :name, ic = :ic, matric = :matric, WHERE matric = '$matric'";
+
+    try {
+        //get the db object
+        $db = new db();
+        //connect
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':name', $input['name']);
+        $stmt->bindParam(':ic', $input['ic']);
+        $stmt->bindParam(':matric', $input['matric']);
+        $stmt->execute();
+        // $count = $stmt->rowCount();
+        $db = null;
+
+        $_SESSION["MATRIC"] = $input['matric'];
+
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        
+    }
+
+
 });
 
 $app->get('/user', function (Request $request, Response $response, array $args) {
