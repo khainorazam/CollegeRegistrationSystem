@@ -28,6 +28,7 @@ header("Location: ../index.php");
 <!-- Print table heading -->
 <thead>
 <tr class="header">
+<th>ID</th>
 <th>Name</th> 
 <th>IC</th>
 <th>Staff ID</th>
@@ -43,6 +44,34 @@ header("Location: ../index.php");
 
 </tr>
 </table>
+
+
+<form name="form1" id = "updateform" method="POST" >
+<table class="update-table" border="0">
+    <tr>
+        <td><strong>ID: </strong></td>
+        <td><INPUT id="id" class="update-box" type="text"  size="20"></td>
+    </tr>
+	<tr>
+        <td><strong>Name: </strong></td>
+        <td><INPUT id="name" class="update-box" type="text" size="20" style = "text-transform: uppercase"></td>
+    </tr>
+    <tr>
+        <td><strong>IC: </strong></td>
+		<td><INPUT id="ic" class="update-box" type="text"  size="15" ></td>
+	</tr>
+	<tr>
+        <td><strong>Staff ID: </strong></td>
+		<td><input id="staffID" class="update-box" type="" size="8" style="text-transform:uppercase;"></td>
+	</tr>
+
+    <tr>
+		<td colspan="2"><br/><button type="submit" id ="update-btn">Update</button>
+        <!-- <input type="submit" id = "update-btn" name="button1" value="Update"></td> -->
+	</tr>
+</table>
+</form>
+
 <script>
 
 document.addEventListener("DOMContentLoaded",function(){
@@ -55,7 +84,25 @@ document.addEventListener("DOMContentLoaded",function(){
             //step 3
             xht.send();
 
-            //step 4 - we do the process upon receving the response with status 200
+            // xht.onreadystatechange = function(){
+            //     if(this.readyState == 4 && this.status == 200){
+            //         for (let i = 0; i < item.length; i++) {
+            //     document.getElementById("id").innerHTML = item[i].id;
+            //     document.getElementById("name").value = item[i].name;
+            //     document.getElementById("ic").value = item[i].ic;
+            //     document.getElementById("staffID").value = item[i].staffID;
+            // }
+            //     }
+
+            //     //step 4, with status == 404
+            //     else if(this.readyState == 4 && this.status == 404){
+            //         alert(this.status + ' resource not found');
+            //     }
+            // };
+
+
+            
+            // //step 4 - we do the process upon receving the response with status 200
             xht.onreadystatechange = function(){
                 if(this.readyState == 4 && this.status == 200){
                     alert(this.responseText);
@@ -64,7 +111,7 @@ document.addEventListener("DOMContentLoaded",function(){
                     var content = '';
                     for (let i = 0; i < item.length; i++) {
 
-                        content += "<tr class ='dalam'><td>" + item[i].name + "</td>" + "<td>" + item[i].ic + "</td>" + "<td>" + item[i].staffID + "</td>" ;
+                        content += "<tr class ='dalam'><td>" + item[i].id + "</td>" + "<td>" + item[i].name + "</td>" +"<td>" + item[i].ic + "</td>" + "<td>" + item[i].staffID + "</td>" ;
                         console.log(item);
                     }
                     document.getElementById("item").innerHTML = content;
@@ -78,63 +125,67 @@ document.addEventListener("DOMContentLoaded",function(){
         }
     )	
 
-
-</script>
-
-<form name="form1">
-<table class="update-table" border="0">
-    <tr>
-        <td><INPUT id="input-box" class="update-box" type="hidden" id="id" size="20" ></td>
-    </tr>
-	<tr>
-        <td><strong>Name: </strong></td>
-        <td><INPUT id="input-box" class="update-box" type="text" id="name" size="20" style = "text-transform: uppercase"></td>
-    </tr>
-    <tr>
-        <td><strong>IC: </strong></td>
-		<td><INPUT id="input-box" class="update-box" type="text" id="ic" size="15" ></td>
-	</tr>
-	<tr>
-        <td><strong>Staff ID: </strong></td>
-		<td><input id="input-box" class="update-box" type="" id="staffID" size="8" style="text-transform:uppercase;"></td>
-	</tr>
-
-    <tr>
-		<td colspan="2"><br/><input type="submit" id = "update-btn" name="button1" value="Update"></td>
-	</tr>
-</table>
-</form>
-
-<script>
-  document.getElementById("update-btn").addEventListener('click',function(e){
+form1.addEventListener("submit",function(e){
     e.preventDefault();
-            var xht = new XMLHttpRequest();
+    // alert("hello");
+    // const data = new FormData(form1);
+
+    var id = document.getElementById("id").value;
+    var staffid = document.getElementById("staffID").value;
+    var name = document.getElementById("name").value;
+    var ic= document.getElementById("ic").value;
+
+    alert(id);
+    alert(name);
+    alert(ic);
+    var xht = new XMLHttpRequest();
+
+    xht.open("PUT","http://localhost/CollegeRegistrationSystem/api/updatemanager/" + id + "/" + staffid + "/" + name + "/" + ic,true);
+    xht.send();
             
-            var id = document.getElementById("staffID").value;
-            var name = document.getElementById("name").value;
-            var ic= document.getElementById("ic").value;
-            
-            xht.open("PUT","http://localhost/CollegeRegistrationSystem/api/updatemanager/" + id,true);
-            xht.send();
-            
-            
-            
-            
-            xht.send(JSON.stringify({
-                "name":name,"ic":ic
-            }));
             xht.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     const objects = JSON.parse(this.responseText);
                     
                 }
             };
-            location.reload();
+    location.reload();
+
+})
+
+//   var el = document.getElementById("submit");
+//   if (el){
+//     alert("hello");
+//     addEventListener('click',function(e){
+//     e.preventDefault();
+//             const formdata = new FormData(document.getElementById("updateform"));
+//             var xht = new XMLHttpRequest();
+            
+            
+//             var id = document.getElementById("staffID").value;
+//             var name = document.getElementById("name").value;
+//             var ic= document.getElementById("ic").value;
+
+//             alert(id);
+//             xht.open("PUT","http://localhost/CollegeRegistrationSystem/api/updatemanager/" + id + "/" + name + "/" + ic,true);
+            
+            
+//             xht.send(formdata);
+//             xht.onreadystatechange = function () {
+//                 if (this.readyState == 4 && this.status == 200) {
+//                     const objects = JSON.parse(this.responseText);
+                    
+//                 }
+//             };
+//             location.reload();
             
 
-        });
+//         });
+//     }
 </script>
 </div>
 </div>
 	</body>
 	</html>
+
+
