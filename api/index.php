@@ -398,34 +398,29 @@ $app->get('/studentinfo', function ($request,$response,$args) {
     }
 });
 
-$app->put('/updatestudentinfo', function (Request $request, Response $response, array $args) {
-    $matric = $_SESSION["MATRIC"] ;
-    $input = $request->getParsedBody();
-    $sql = "UPDATE student SET name = :name, ic = :ic, matric = :matric, WHERE matric = '$matric'";
+$app->put('/updatestudentinfo/{id}/{name}/{ic}/{matric}', function (Request $request, Response $response, array $args) {
+    $id = $request->getAttribute('id');
+    $name = $request->getAttribute('name');
+    $ic = $request->getAttribute('ic');
+    $matric = $request->getAttribute('matric');
 
-    try {
-        //get the db object
+        try {
+        //get db object
         $db = new db();
-        //connect
-        $db = $db->connect();
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':name', $input['name']);
-        $stmt->bindParam(':ic', $input['ic']);
-        $stmt->bindParam(':matric', $input['matric']);
-        $stmt->execute();
-        // $count = $stmt->rowCount();
-        $db = null;
+        //conncect
+        $pdo = $db->connect();
 
-        $_SESSION["MATRIC"] = $input['matric'];
 
-    } catch (PDOException $e) {
-        $data = array(
-            "status" => "fail"
-        );
-        
+        $sql = "UPDATE student SET name =?, ic=?, matric =? WHERE id=?";
+
+
+        $pdo->prepare($sql)->execute([$name, $ic,$matric, $id]);
+
+        echo '{"notice": {"text": "User '. $name .' has been just updated now"}}';
+        $pdo = null;
+    } catch (\PDOException $e) {
+        echo '{"error": {"text": ' . $e->getMessage() . '}}';
     }
-
-
 });
 
 $app->get('/user', function (Request $request, Response $response, array $args) {
