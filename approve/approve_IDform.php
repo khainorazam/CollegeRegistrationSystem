@@ -16,7 +16,7 @@ header("Location: ../index.php");
 		<li class="navi"><a>College Registration System</a></li>
 		<li id="active-link" class="navi" style="float:right"><a href="../logout.php"><img src="../.css/image/whitelogout.png" alt="try" style = "width:default;height:25px;"></a></li>
 		<li class="navi" style="float:right"><a href="#about"><img src="../.css/image/user.png" alt="try" style = "width:default;height:24px;"></a></li>
-		<li class="navi" style="float:right"><a href="#about"><?php echo $_SESSION['USER'] ?></a></li>
+		<li class="navi" style="float:right"><a id="username" href="#about"></a></li>
 	</ul>
 
 <div class="approve-student-page">
@@ -41,6 +41,18 @@ header("Location: ../index.php");
 	</TABLE>
 
 <script>
+
+const xhr = new XMLHttpRequest();
+
+xhr.open('get', 'http://localhost/CollegeRegistrationSystem/api/aminfo', true);
+xhr.send();
+xhr.onload = function () {
+var item = JSON.parse(xhr.responseText);
+
+for (let i = 0; i < item.length; i++) {
+    document.getElementById("username").innerHTML = item[i].name;
+}
+}
 
 
 document.addEventListener("DOMContentLoaded",function(){

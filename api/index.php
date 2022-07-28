@@ -363,6 +363,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
                 $_SESSION["PASSWORD"] =$user['password'];
                 $_SESSION["LEVEL"] =$user['level'];
                 $_SESSION["MATRIC"] = $user['matric'];
+                $_SESSION["STAFFID"] = $user['matric'];
                 echo ($_SESSION["LEVEL"]);
             } 
 
@@ -379,6 +380,30 @@ $app->get('/studentinfo', function ($request,$response,$args) {
 
     $matric = $_SESSION["MATRIC"] ;
     $sql = "SELECT * FROM student WHERE matric = '$matric'";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $user = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($user);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+});
+
+//view for accomodation manager
+$app->get('/aminfo', function ($request,$response,$args) {
+
+    $staffid = $_SESSION["STAFFID"] ;
+    $sql = "SELECT * FROM accomodationmanager WHERE staffID = '$staffid'";
 
     try {
         // Get DB Object
