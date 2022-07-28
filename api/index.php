@@ -175,43 +175,72 @@ $app->get('/accom', function (Request $request, Response $response, array $args)
 
 });
 
-//PUT: Update specific accomodation manager
-$app->put('/updatemanager/{staffID}', function (Request $request, Response $response, array $args) {
-    $id = $args['staffID'];
-    $input = $request->getParsedBody();
-    $sql = "UPDATE AccomodationManager SET name = :name, ic= :ic, WHERE staffID = :staffID";
+// //PUT: Update specific accomodation manager
+// $app->put('/updatemanager', function (Request $request, Response $response,array $args) {
+//     $staffid=$_SESSION['STAFFID'];
+    
+//     $input = $request->getParsedBody();
+//     $sql = "UPDATE accomodationmanager SET name = :name, ic= :ic, staffID = :staffID, WHERE staffID = '$staffid'";
+
+//     try {
+//         //get the db object
+//         $db = new db();
+//         //connect
+//         $db = $db->connect();
+//         $stmt = $db->prepare($sql);
+//         $stmt->bindParam(':name', $input['name']);
+//         $stmt->bindParam(':ic', $input['ic']);
+//         $stmt->bindParam(':staffID', $input['staffID']);
+//         $stmt->execute();
+//         $count = $stmt->rowCount();
+//         $db = null;
+
+//         $_SESSION["STAFFID"] = $input['staffID'];
+//         if($count == 0){
+//             return $response->withJson(array('status' => 'Unsuccessful', 'message' => 'Failed to update'), 400);
+//         }
+//         $data = array(
+//             'status' => 'success',
+//             'message' => 'successfully update',
+//         );
+//         return $response->withJson($data, 200);
+
+
+//     } catch (PDOException $e) {
+//         $error = array(
+//             'status' => 'Error',
+//             'message' => $e->getMessage(),
+//         );
+//         return $response->withJson($error, 400);
+//     }
+
+
+// });
+
+$app->put('/updatemanager/{id}/{staffID}/{name}/{ic}', function (Request $request, Response $reponse, array $args) {
+    $id = $request->getAttribute('id');
+    $staffid = $request->getAttribute('staffID');
+    $name = $request->getAttribute('name');
+    $ic = $request->getAttribute('ic');
+
 
     try {
-        //get the db object
+        //get db object
         $db = new db();
-        //connect
-        $db = $db->connect();
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':staffID', $id);
-        $stmt->bindParam(':name', $input['name']);
-        $stmt->bindParam(':ic', $input['ic']);
-        $stmt->execute();
-        $count = $stmt->rowCount();
-        $db = null;
-        if($count == 0){
-            return $response->withJson(array('status' => 'Unsuccessful', 'message' => 'Failed to update'), 400);
-        }
-        $data = array(
-            'status' => 'success',
-            'message' => 'successfully update',
-        );
-        return $response->withJson($data, 200);
+        //conncect
+        $pdo = $db->connect();
 
 
-    } catch (PDOException $e) {
-        $error = array(
-            'status' => 'Error',
-            'message' => $e->getMessage(),
-        );
-        return $response->withJson($error, 400);
+        $sql = "UPDATE accomodationmanager SET name =?, ic=?, staffID =? WHERE id=?";
+
+
+        $pdo->prepare($sql)->execute([$name, $ic,$staffid, $id]);
+
+        echo '{"notice": {"text": "User '. $name .' has been just updated now"}}';
+        $pdo = null;
+    } catch (\PDOException $e) {
+        echo '{"error": {"text": ' . $e->getMessage() . '}}';
     }
-
-
 });
 
 //delete user
