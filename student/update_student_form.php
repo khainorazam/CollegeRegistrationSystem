@@ -29,6 +29,9 @@ if ($_SESSION["Login"] != "YES") //if the user is not logged in or has been logg
 
                 <form id="updateform" name="form1" method="POST" onsubmit="return validate() & alert('New data has been updated!');">
                     <table class="update-table" border="0">
+                    <tr>
+                <td><INPUT id="id" class="update-box" type="hidden" name="id" size="20" value=""></td>
+            </tr>
                         <tr>
                             <td><strong>Name: </strong></td>
 
@@ -45,17 +48,7 @@ if ($_SESSION["Login"] != "YES") //if the user is not logged in or has been logg
                         <TR>
                             <TD><strong>College: </strong></TD>
                             <TD><select class="update-box" id="studentcollege" name="studentCollege" disabled>
-                                    <?php
-                                    $student_college = array('KTDI', 'KTC');
-
-                                    foreach ($student_college as $index => $value) {
-                                        if ($result['college'] == $value) {
-                                            echo "<option value=\"{$value}\" selected>{$value}</option>";
-                                        } else {
-                                            echo "<option value=\"{$value}\">{$value}</option>";
-                                        }
-                                    }
-                                    ?>
+                
                             </TD>
                             </select>
                         </TR>
@@ -114,9 +107,16 @@ if ($_SESSION["Login"] != "YES") //if the user is not logged in or has been logg
 
             for (let i = 0; i < item.length; i++) {
                 document.getElementById("username").innerHTML = item[i].name;
+                document.getElementById("id").value = item[i].id;
                 document.getElementById("name").value = item[i].name;
                 document.getElementById("ic").value = item[i].ic;
                 document.getElementById("matric").value = item[i].matric;
+                if (item[i].college == '' || item[i].college == null){
+                   document.getElementById("studentcollege").value = 'null'; 
+                }else{
+                    document.getElementById("studentcollege").value = item[i].college; 
+                }
+                    
                 if (item[i].approvalstatus == '0')
                     document.getElementById("as").value = "Pending";
                 if (item[i].approvalstatus == '1')
@@ -126,33 +126,28 @@ if ($_SESSION["Login"] != "YES") //if the user is not logged in or has been logg
             }
         }
 
-        document.getElementById("submit").addEventListener('click', function(e) {
-            e.preventDefault();
+        form1.addEventListener("submit",function(e){
+    e.preventDefault();
 
-            const formdata = new FormData(document.getElementById("updateform"));
-            var xhl = new XMLHttpRequest();
-            // var name = document.getElementById("name").value;
-            // var ic = document.getElementById("ic").value;
-            // var matric = document.getElementById("matric").value;
+    var id = document.getElementById("id").value;
+    var name = document.getElementById("name").value;
+    var ic = document.getElementById("ic").value;
+    var matric= document.getElementById("matric").value;
 
-            xhl.open("put", "http://localhost/CollegeRegistrationSystem/api/updatestudentinfo", true);
+    var xht = new XMLHttpRequest();
 
-            // xhl.send(JSON.stringify({
-            //     "name": name,
-            //     "ic": ic,
-            //     "matric": matric,
-            // }));
-            xhl.send(formdata);
-
-            xhl.onreadystatechange = function() {
+    xht.open("PUT","http://localhost/CollegeRegistrationSystem/api/updatestudentinfo/" + id + "/" + name + "/" + ic + "/" + matric,true);
+    xht.send();
+            
+            xht.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     const objects = JSON.parse(this.responseText);
-
+                    
                 }
             };
-            location.reload();
+    location.reload();
 
-        });
+})
     </script>
 
 </body>

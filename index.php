@@ -76,7 +76,7 @@
           window.location.href = 'http://localhost/CollegeRegistrationSystem/main.php';
 
         }
-        if (xhr.responseText.trim() == "3") {
+        else if (xhr.responseText.trim() == "3") {
           alert("Login as Student");
           window.location.href = 'http://localhost/CollegeRegistrationSystem/main.php';
 
